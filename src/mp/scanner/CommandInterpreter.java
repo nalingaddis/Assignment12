@@ -77,56 +77,61 @@ public class CommandInterpreter implements CommandInterpreterInterface{
 	//Sync Animation
 	@Tags({"asynchronousArthur"})
 	public void asyncArthur() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceArthurAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceArthurAnimator(), false));
 		
 		thread.start();
 	}
 	
 	@Tags({"asynchronousGalahad"})
 	public void asyncGalahad() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceGalahadAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceGalahadAnimator(), false));
 		
 		thread.start();
 	}
 	
 	@Tags({"asynchronousLancelot"})
 	public void asyncLancelot() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceLancelotAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceLancelotAnimator(), false));
 		
 		thread.start();
 	}
 	
 	@Tags({"asynchronousRobin"})
 	public void asyncRobin() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceRobinAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceRobinAnimator(), false));
 		
 		thread.start();
 	}
 	
 	//Coordinated Animations
-	@Tags({"waitArthur"})
+	@Tags({"waitingArthur"})
 	public void waitArthur() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceArthurAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceArthurAnimator(), true));
 		
 		thread.start();
 	}
-	@Tags({"waitGalahad"})
+	@Tags({"waitingGalahad"})
 	public void waitGalahad() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceGalahadAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceGalahadAnimator(), true));
 		
 		thread.start();
 	}
-	@Tags({"waitLancelot"})
+	@Tags({"waitingLancelot"})
 	public void waitLancelot() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceLancelotAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceLancelotAnimator(), true));
 		
 		thread.start();
 	}
 	
-	@Tags({"waitRobin"})
+	@Tags({"waitingRobin"})
 	public void waitRobin() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceRobinAnimator()));
+		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceRobinAnimator(), true));
 		
 		thread.start();
+	}
+	
+	@Tags({"startAnimation"})
+	public void startAnimation() {
+		SingletonsCreator.produceClearanceManager().proceedAll();
 	}
 }

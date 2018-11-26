@@ -1,6 +1,7 @@
 package mp.table;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
@@ -8,31 +9,31 @@ import util.annotations.Tags;
 
 @Tags({"Table"})
 @StructurePattern(StructurePatternNames.MAP_PATTERN)
-public class Table implements TableInterface{
+public class Table<T> implements TableInterface<T>{
 	
-	ArrayList<ArrayList<Object>> table = new ArrayList<>();
+	List<String> keys = new ArrayList<>();
+	List<T> objects = new ArrayList<>();
 	
 	//Constructors
 	public Table() {
-		table.add(new ArrayList<Object>());
-		table.add(new ArrayList<Object>());
+		
 	}
 	
 	//Methods
-	public Object get(String key) {
-		if(table.get(0).indexOf(key) == -1) {
+	public T get(String key) {
+		if(keys.indexOf(key) == -1) {
 			return null;
 		} else {
-			return table.get(1).get(table.get(0).indexOf(key));
+			return (T) objects.get(keys.get(0).indexOf(key));
 		}
 	}
 	
-	public void put(String key, Object val) {
+	public void put(String key, T val) {
 		if(get(key) == null) {
-			table.get(0).add(key);
-			table.get(1).add(val);
+			keys.add(key);
+			objects.add(val);
 		} else {
-			table.get(1).set(table.get(0).indexOf(key), val);
+			objects.set(keys.indexOf(key), val);
 		}
 	}
 	
@@ -41,8 +42,8 @@ public class Table implements TableInterface{
 	}
 	
 	public void print() {
-		for(int i = 0; i < table.get(0).size(); i++) {
-			print((String) table.get(0).get(i));
+		for(String key:keys) {
+			print(key);
 		}
 	}
 }

@@ -7,9 +7,9 @@ import util.annotations.Tags;
 @Tags({"Table"})
 @StructurePattern(StructurePatternNames.MAP_PATTERN)
 
-public interface TableInterface {
-	public Object get(String key);
-	public void put(String key, Object val);
+public interface TableInterface<T> {
+	public T get(String key);
+	public void put(String key, T val);
 	
 	public void print(String key);
 	public void print();

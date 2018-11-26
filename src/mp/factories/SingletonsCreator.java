@@ -8,6 +8,7 @@ import mp.clearance.ABroadcastingClearanceManager;
 import mp.clearance.BroadcastingClearanceManager;
 import mp.controllers.BridgeSceneController;
 import mp.controllers.BridgeSceneControllerInterface;
+import mp.interfaces.AvatarInterface;
 import mp.interfaces.BridgeSceneInterface;
 import mp.parser.Parser;
 import mp.parser.ParserInterface;
@@ -33,7 +34,7 @@ import util.annotations.Tags;
 public class SingletonsCreator {	
 	private static ScannerBeanInterface scanner;
 	private static BridgeSceneInterface bridge;
-	private static TableInterface table;
+	private static TableInterface<AvatarInterface> table;
 	private static CommandInterpreterInterface interpreter;
 	private static PropertyChangeListener consoleScene;
 	private static ObservableBridgeScenePainterInterface obspScene;
@@ -62,9 +63,9 @@ public class SingletonsCreator {
 	}
 	
 	@Tags({"avatarTableFactoryMethod"})
-	public static TableInterface produceAvatarTable() {
+	public static TableInterface<AvatarInterface> produceAvatarTable() {
 		if(table == null) {
-			table = new Table();
+			table = new Table<AvatarInterface>();
 			
 			table.put("arthur", produceBridgeScene().getArthur());
 			table.put("galahad", produceBridgeScene().getGalahad());
