@@ -8,6 +8,8 @@ import mp.clearance.ABroadcastingClearanceManager;
 import mp.clearance.BroadcastingClearanceManager;
 import mp.controllers.BridgeSceneController;
 import mp.controllers.BridgeSceneControllerInterface;
+import mp.history.DoHistory;
+import mp.history.DoHistoryInterface;
 import mp.interfaces.AvatarInterface;
 import mp.interfaces.BridgeSceneInterface;
 import mp.parser.Parser;
@@ -45,6 +47,8 @@ public class SingletonsCreator {
 	private static ParserInterface parser;
 	private static AnimatorInterface arthurAnimator, galahadAnimator, guardAnimator, lancelotAnimator, robinAnimator;
 	private static BroadcastingClearanceManager clearance;
+	private static DoHistoryInterface doer;
+	private static TableInterface<Runnable> environment;
 	
 	@Tags({"scannerFactoryMethod"})
 	public static ScannerBeanInterface produceScannerBean() {
@@ -197,5 +201,22 @@ public class SingletonsCreator {
 		}
 		
 		return clearance;
+	}
+	
+	public static DoHistoryInterface produceDoHistory() {
+		if(doer == null) {
+			doer = new DoHistory();
+		}
+		
+		return doer;
+	}
+	
+	@Tags({"environmentFactoryMethod"})
+	public static TableInterface<Runnable> produceEnvironment(){
+		if(environment == null) {
+			environment = new Table<Runnable>();
+		}
+		
+		return environment;
 	}
 }

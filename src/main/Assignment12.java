@@ -4,10 +4,11 @@ import bus.uigen.ObjectEditor;
 import mp.factories.SingletonsCreator;
 import mp.interfaces.BridgeSceneInterface;
 import mp.scanner.CommandInterpreterInterface;
+import util.misc.ThreadSupport;
 
 public class Assignment12 {	
 	
-	public static void assignment11Demo() {
+	public static void assignment12Demo() {
 		BridgeSceneInterface scene = SingletonsCreator.produceBridgeScene();
 		
 		SingletonsCreator.produceDelegatingBridgeSceneView();
@@ -19,24 +20,13 @@ public class Assignment12 {
 				
 		CommandInterpreterInterface comInt = SingletonsCreator.produceCommandInterpreter();
 		
-		comInt.asyncArthur();
-		comInt.asyncArthur();
-		comInt.asyncLancelot();
-		comInt.asyncLancelot();
-		comInt.asyncRobin();
-		comInt.asyncRobin();
-		comInt.asyncGalahad();
+		ThreadSupport.sleep(1000);
+		comInt.setCommand("move arthur 100 100");
+		ThreadSupport.sleep(1000);
+		comInt.setCommand("undo");
+		ThreadSupport.sleep(1000);
+		comInt.setCommand("redo");
 		
-		ObjectEditor.edit(comInt);
-		comInt.setCommand("{ move arthur 2 5 move arthur 3 10 move arthur 5 2 move arthur 7 6 }");
-		comInt.setCommand("{ move arthur 10 8 move arthur 4 6 { move arthur 2 5 move arthur 3 10 move arthur 5 2 move arthur 7 6 } move arthur 3 1 }");
-		comInt.setCommand("approach Arthur");
-		comInt.setCommand("passed");
-		comInt.setCommand("failed");
-		comInt.setCommand("repeat 5  move Arthur  2 3");
-		comInt.setCommand("repeat 5 { move Arthur  2 3 move Galahad 5 6 }");
-		comInt.setCommand("repeat 4 repeat 5 { move Arthur + 2 - 3 move Galahad - 5 + 6 }");
-		comInt.setCommand("Redo");
 	}
 	
 	public static void main(String[] args) {
@@ -49,7 +39,7 @@ public class Assignment12 {
 //		assignment9Demo();
 //		assignment10Demo();
 		
-		assignment11Demo();
+		assignment12Demo();
 	}
 	
 	/**

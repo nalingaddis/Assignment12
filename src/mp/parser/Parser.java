@@ -6,8 +6,11 @@ import mp.commands.CommandListInterface;
 import mp.commands.FailCommand;
 import mp.commands.MoveCommand;
 import mp.commands.PassCommand;
+import mp.commands.RedoCommand;
 import mp.commands.RepeatCommand;
 import mp.commands.SayCommand;
+import mp.commands.UndoCommand;
+import mp.commands.UndoCommandInterface;
 import mp.factories.SingletonsCreator;
 import mp.history.ClearableHistoryInterface;
 import mp.interfaces.AvatarInterface;
@@ -15,6 +18,8 @@ import mp.interfaces.BridgeSceneInterface;
 import mp.scanner.ScannerBeanInterface;
 import mp.table.TableInterface;
 import mp.tokens.Approach;
+import mp.tokens.Call;
+import mp.tokens.Define;
 import mp.tokens.End;
 import mp.tokens.Fail;
 import mp.tokens.Minus;
@@ -23,12 +28,17 @@ import mp.tokens.Number;
 import mp.tokens.NumberTokenInterface;
 import mp.tokens.Pass;
 import mp.tokens.Plus;
+import mp.tokens.ProceedAll;
 import mp.tokens.Quote;
 import mp.tokens.Redo;
 import mp.tokens.Repeat;
+import mp.tokens.RotateLeftArm;
+import mp.tokens.RotateRightArm;
 import mp.tokens.Say;
+import mp.tokens.Sleep;
 import mp.tokens.Start;
 import mp.tokens.TokenInterface;
+import mp.tokens.Undo;
 import mp.tokens.Word;
 import mp.tokens.WordTokenInterface;
 
@@ -36,8 +46,9 @@ public class Parser implements ParserInterface{
 	
 	private String commandText = "", errors = "";
 	private ScannerBeanInterface scanner = SingletonsCreator.produceScannerBean();
-	private TableInterface table = SingletonsCreator.produceAvatarTable();
+	private TableInterface<AvatarInterface> table = SingletonsCreator.produceAvatarTable();
 	private BridgeSceneInterface scene = SingletonsCreator.produceBridgeScene();
+	private TableInterface<Runnable> environment = SingletonsCreator.produceEnvironment();
 	
 	private Runnable errorReturn = new Thread();
 	
@@ -86,12 +97,40 @@ public class Parser implements ParserInterface{
 			return parseRepeatCommand();
 		} else if(next instanceof Start) {
 			return parseCommandList();
+		} else if (next instanceof Undo) {
+			return parseUndoCommand();
+		} else if (next instanceof Redo) {
+			return parseRedoCommand();
+		} else if (next instanceof RotateLeftArm) {
+			return parseRotateLeftArmCommand;
+		} else if (next instanceof RotateRightArm) {
+			return parseRotateRightArmCommand;
+		} else if (next instanceof Sleep) {
+			return parseSleepCommand;
+		} else if (next instanceof Define) {
+			return parseDefineCommand;
+		} else if (next instanceof Call) {
+			return parseCallCommand;
+		} else if (next instanceof Thread) {
+			return parseThreadCommand;
+		} else if (next instanceof ProceedAll) {
+			return parseProceedAllCommand;
 		} else {
 			illegalCommand();
 			return errorReturn;
 		}
 	}
-
+	
+	
+	
+	public Runnable parseRedoCommand() {
+		return new RedoCommand();
+	}
+	
+	public Runnable parseUndoCommand() {
+		return new UndoCommand();
+	}
+	
 	public Runnable parseSayCommand() {
 		next = safeNext();
 		
@@ -118,7 +157,10 @@ public class Parser implements ParserInterface{
 		int x = parseNumber();
 		int y = parseNumber();
 		
-		return new MoveCommand(avatar, x, y);
+		UndoCommandInterface move = new MoveCommand(avatar, x, y);
+		SingletonsCreator.produceDoHistory().add(move);
+		
+		return move;
 	}
 	
 	public int parseNumber() {

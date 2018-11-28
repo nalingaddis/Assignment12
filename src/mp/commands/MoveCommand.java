@@ -4,7 +4,7 @@ import mp.interfaces.AvatarInterface;
 import util.annotations.Tags;
 
 @Tags({"MoveCommand"})
-public class MoveCommand implements Runnable{
+public class MoveCommand implements UndoCommandInterface{
 
 	private AvatarInterface avatar;
 	private int x, y;
@@ -17,5 +17,9 @@ public class MoveCommand implements Runnable{
 	
 	public void run() {
 		avatar.move(x, y);
+	}
+
+	public void undo() {
+		avatar.move(-x, -y);
 	}
 }
