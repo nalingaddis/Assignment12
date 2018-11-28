@@ -1,14 +1,21 @@
 package mp.parser;
 
 import mp.commands.ApproachCommand;
+import mp.commands.CallCommand;
 import mp.commands.CommandList;
 import mp.commands.CommandListInterface;
+import mp.commands.DefineCommand;
 import mp.commands.FailCommand;
 import mp.commands.MoveCommand;
 import mp.commands.PassCommand;
+import mp.commands.ProceedAllCommand;
 import mp.commands.RedoCommand;
 import mp.commands.RepeatCommand;
+import mp.commands.RotateLeftArmCommand;
+import mp.commands.RotateRightArmCommand;
 import mp.commands.SayCommand;
+import mp.commands.SleepCommand;
+import mp.commands.ThreadCommand;
 import mp.commands.UndoCommand;
 import mp.commands.UndoCommandInterface;
 import mp.factories.SingletonsCreator;
@@ -37,6 +44,7 @@ import mp.tokens.RotateRightArm;
 import mp.tokens.Say;
 import mp.tokens.Sleep;
 import mp.tokens.Start;
+import mp.tokens.Thread;
 import mp.tokens.TokenInterface;
 import mp.tokens.Undo;
 import mp.tokens.Word;
@@ -50,7 +58,7 @@ public class Parser implements ParserInterface{
 	private BridgeSceneInterface scene = SingletonsCreator.produceBridgeScene();
 	private TableInterface<Runnable> environment = SingletonsCreator.produceEnvironment();
 	
-	private Runnable errorReturn = new Thread();
+	private Runnable errorReturn = null;
 	
 	//Iteration
 	private int index = -1;
@@ -102,26 +110,69 @@ public class Parser implements ParserInterface{
 		} else if (next instanceof Redo) {
 			return parseRedoCommand();
 		} else if (next instanceof RotateLeftArm) {
-			return parseRotateLeftArmCommand;
+			return parseRotateLeftArmCommand();
 		} else if (next instanceof RotateRightArm) {
-			return parseRotateRightArmCommand;
+			return parseRotateRightArmCommand();
 		} else if (next instanceof Sleep) {
-			return parseSleepCommand;
+			return parseSleepCommand();
 		} else if (next instanceof Define) {
-			return parseDefineCommand;
+			return parseDefineCommand();
 		} else if (next instanceof Call) {
-			return parseCallCommand;
+			return parseCallCommand();
 		} else if (next instanceof Thread) {
-			return parseThreadCommand;
+			return parseThreadCommand();
 		} else if (next instanceof ProceedAll) {
-			return parseProceedAllCommand;
+			return parseProceedAllCommand();
 		} else {
 			illegalCommand();
 			return errorReturn;
 		}
 	}
 	
+	public Runnable parseProceedAllCommand() {
+		return new ProceedAllCommand();
+	}
 	
+	public Runnable parseThreadCommand() {
+		String name = next().getInput();
+		return new ThreadCommand(name);
+	}
+	
+	public Runnable parseCallCommand() {
+		String name = next().getInput();
+		return new CallCommand(name);
+	}
+	
+	public Runnable parseDefineCommand() {
+		String name = next().getInput();
+		Runnable command = parseCommand();
+		
+		return new DefineCommand(name, command);
+	}
+	
+	public Runnable parseSleepCommand() {
+		int shleep = parseNumber();
+		
+		return new SleepCommand(shleep);
+	}
+	
+	public Runnable parseRotateLeftArmCommand() {
+		next = safeNext();
+		
+		AvatarInterface avatar = (AvatarInterface) table.get(((WordTokenInterface) next).getValue());
+		int angle = parseNumber();
+		
+		return new RotateLeftArmCommand(avatar, angle);
+	}
+	
+	public Runnable parseRotateRightArmCommand() {
+		next = safeNext();
+		
+		AvatarInterface avatar = (AvatarInterface) table.get(((WordTokenInterface) next).getValue());
+		int angle = parseNumber();
+		
+		return new RotateRightArmCommand(avatar, angle);
+	}
 	
 	public Runnable parseRedoCommand() {
 		return new RedoCommand();

@@ -1,10 +1,12 @@
 package main;
 
+import bus.uigen.OEFrame;
 import bus.uigen.ObjectEditor;
+import bus.uigen.widgets.TextFieldSelector;
+import mp.custom.CustomSwingTextField;
 import mp.factories.SingletonsCreator;
 import mp.interfaces.BridgeSceneInterface;
 import mp.scanner.CommandInterpreterInterface;
-import util.misc.ThreadSupport;
 
 public class Assignment12 {	
 	
@@ -19,13 +21,28 @@ public class Assignment12 {
 		SingletonsCreator.produceConsoleSceneView();
 				
 		CommandInterpreterInterface comInt = SingletonsCreator.produceCommandInterpreter();
+//		
+//		ObjectEditor.initialize();
+//		TextFieldSelector.setTextFieldFactory(new CustomSwingTextField());
+//		
+//		OEFrame editor = ObjectEditor.edit(comInt);
+//		
+//		comInt.setCommand("define doMove { move arthur 2 5 move arthur 3 10 move arthur 5 2 move arthur 7 6 } ");
+//		comInt.setCommand("thread doMove");
 		
-		ThreadSupport.sleep(1000);
-		comInt.setCommand("move arthur 100 100");
-		ThreadSupport.sleep(1000);
-		comInt.setCommand("undo");
-		ThreadSupport.sleep(1000);
-		comInt.setCommand("redo");
+		comInt.lockstepArthur();
+		comInt.lockstepGalahad();
+		comInt.lockstepLancelot();
+		comInt.lockstepRobin();
+		
+		comInt.lockstepGuard();
+		
+//		ThreadSupport.sleep(1000);
+//		comInt.setCommand("move arthur 100 100");
+//		ThreadSupport.sleep(1000);
+//		comInt.setCommand("undo");
+//		ThreadSupport.sleep(1000);
+//		comInt.setCommand("redo");
 		
 	}
 	

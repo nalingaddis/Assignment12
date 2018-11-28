@@ -5,7 +5,9 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import mp.animation.AnimatingCommand;
-import mp.animation.Animator;
+import mp.animation.CoordinatedAnimationCommand;
+import mp.animation.CoordinatingAnimatingCommand;
+import mp.animation.CoordinatingAnimator;
 import mp.factories.SingletonsCreator;
 import mp.history.PCLSupport;
 import mp.history.PCLSupportInterface;
@@ -133,5 +135,41 @@ public class CommandInterpreter implements CommandInterpreterInterface{
 	@Tags({"startAnimation"})
 	public void startAnimation() {
 		SingletonsCreator.produceClearanceManager().proceedAll();
+	}
+	
+	//Lockstep
+	@Tags({"lockstepGuard"})
+	public void lockstepGuard() {
+		Thread thread = new Thread(new CoordinatingAnimatingCommand(
+				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getGuard())));
+		thread.start();
+	}
+	
+	@Tags({"lockstepArthur"})
+	public void lockstepArthur() {
+		Thread thread = new Thread(new CoordinatedAnimationCommand(
+				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getArthur())));
+		thread.start();
+	}
+	
+	@Tags({"lockstepGalahad"})
+	public void lockstepGalahad() {
+		Thread thread = new Thread(new CoordinatedAnimationCommand(
+				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getGalahad())));
+		thread.start();
+	}
+	
+	@Tags({"lockstepLancelot"})
+	public void lockstepLancelot() {
+		Thread thread = new Thread(new CoordinatedAnimationCommand(
+				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getLancelot())));
+		thread.start();
+	}
+	
+	@Tags({"lockstepRobin"})
+	public void lockstepRobin() {
+		Thread thread = new Thread(new CoordinatedAnimationCommand(
+				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getRobin())));
+		thread.start();
 	}
 }

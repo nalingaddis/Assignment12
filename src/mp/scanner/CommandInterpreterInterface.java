@@ -5,6 +5,9 @@ import java.util.List;
 
 import mp.animation.AnimatingCommand;
 import mp.animation.Animator;
+import mp.animation.CoordinatedAnimationCommand;
+import mp.animation.CoordinatingAnimator;
+import mp.factories.SingletonsCreator;
 import mp.table.TableInterface;
 import util.annotations.EditablePropertyNames;
 import util.annotations.PropertyNames;
@@ -33,4 +36,11 @@ public interface CommandInterpreterInterface extends PropertyListenerRegisterer 
 	public void asyncGalahad();
 	public void asyncLancelot();
 	public void asyncRobin();
+	
+	//LockStep
+	public void lockstepGuard();
+	public void lockstepArthur();
+	public void lockstepGalahad();	
+	public void lockstepLancelot();	
+	public void lockstepRobin();	
 }

@@ -24,7 +24,7 @@ public class Table<T> implements TableInterface<T>{
 		if(keys.indexOf(key) == -1) {
 			return null;
 		} else {
-			return (T) objects.get(keys.get(0).indexOf(key));
+			return (T) objects.get(keys.indexOf(key));
 		}
 	}
 	
