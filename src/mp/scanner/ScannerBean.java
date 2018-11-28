@@ -2,6 +2,7 @@ package mp.scanner;
 
 import java.util.Iterator;
 
+import mp.exceptions.ScanningException;
 import mp.history.ClearableHistory;
 import mp.history.ClearableHistoryInterface;
 import mp.tokens.Approach;
@@ -69,7 +70,11 @@ public class ScannerBean implements ScannerBeanInterface{
 		largeArray = new TokenInterface[maxArrayLength];
 		tokenCounter = 0;
 		
-		scanString(scannedString);	
+		try {
+			scanString(scannedString);	
+		} catch (ScanningException e) {
+			errors = e.toString();
+		}
 		
 		tokens = new TokenInterface[tokenCounter];
 		for(int i = 0; i < tokenCounter; i++) {
@@ -85,7 +90,7 @@ public class ScannerBean implements ScannerBeanInterface{
 		return errors;
 	}
 	
-	private void scanString(String s) {
+	private void scanString(String s) throws ScanningException{
 		tokenList.clear();
 		
 		//A temporary var to hold the value of next token
@@ -201,7 +206,7 @@ public class ScannerBean implements ScannerBeanInterface{
 				tokenList.addElement(new End(temp));
 				tokenCounter++;
 			} else {
-				errors = errors + "This token does not match any proper formats, ";
+				throw new ScanningException("This token does not match any proper formats.");
 			}
 			
 			//Checks to see if there is another token

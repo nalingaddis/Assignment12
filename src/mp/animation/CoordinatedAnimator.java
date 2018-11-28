@@ -7,13 +7,13 @@ import util.misc.ThreadSupport;
 
 public class CoordinatedAnimator extends Animator implements CoordinatedAnimatorInterface{
 
-	public CoordinatedAnimator(AvatarInterface avatar) {
-		super(avatar);
+	public CoordinatedAnimator() {
+		super();
 	}
 	
 	@Override
 	@Tags({"animateAvatar"})
-	public synchronized void dance() {
+	public synchronized void dance(AvatarInterface avatar) {
 		for(int i = 0; i < jumps; i++) {
 			SingletonsCreator.produceClearanceManager().waitForProceed();
 			if(up) {

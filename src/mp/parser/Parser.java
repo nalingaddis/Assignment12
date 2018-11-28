@@ -18,6 +18,7 @@ import mp.commands.SleepCommand;
 import mp.commands.ThreadCommand;
 import mp.commands.UndoCommand;
 import mp.commands.UndoCommandInterface;
+import mp.exceptions.ParsingException;
 import mp.factories.SingletonsCreator;
 import mp.history.ClearableHistoryInterface;
 import mp.interfaces.AvatarInterface;
@@ -58,7 +59,7 @@ public class Parser implements ParserInterface{
 	private BridgeSceneInterface scene = SingletonsCreator.produceBridgeScene();
 	private TableInterface<Runnable> environment = SingletonsCreator.produceEnvironment();
 	
-	private Runnable errorReturn = null;
+	private Runnable errorReturn = new java.lang.Thread();
 	
 	//Iteration
 	private int index = -1;
@@ -88,7 +89,7 @@ public class Parser implements ParserInterface{
 	}
 	
 	//Parsing
-	public Runnable parseCommand() {
+	public Runnable parseCommand() throws ParsingException{
 		next = safeNext();
 		
 		if(next instanceof Say) {
@@ -119,7 +120,7 @@ public class Parser implements ParserInterface{
 			return parseDefineCommand();
 		} else if (next instanceof Call) {
 			return parseCallCommand();
-		} else if (next instanceof Thread) {
+		} else if (next instanceof mp.tokens.Thread) {
 			return parseThreadCommand();
 		} else if (next instanceof ProceedAll) {
 			return parseProceedAllCommand();
@@ -129,34 +130,39 @@ public class Parser implements ParserInterface{
 		}
 	}
 	
-	public Runnable parseProceedAllCommand() {
+	public Runnable parseProceedAllCommand() throws ParsingException{
 		return new ProceedAllCommand();
 	}
 	
-	public Runnable parseThreadCommand() {
+	public Runnable parseThreadCommand()  throws ParsingException{
 		String name = next().getInput();
 		return new ThreadCommand(name);
 	}
 	
-	public Runnable parseCallCommand() {
+	public Runnable parseCallCommand()  throws ParsingException{
 		String name = next().getInput();
 		return new CallCommand(name);
 	}
 	
-	public Runnable parseDefineCommand() {
+	public Runnable parseDefineCommand()  throws ParsingException{
 		String name = next().getInput();
-		Runnable command = parseCommand();
 		
-		return new DefineCommand(name, command);
+		try {
+			Runnable command = parseCommand();
+			return new DefineCommand(name, command);
+		} catch (ParsingException e) {
+			errors = e.toString();
+			return errorReturn;
+		}
 	}
 	
-	public Runnable parseSleepCommand() {
+	public Runnable parseSleepCommand()  throws ParsingException{
 		int shleep = parseNumber();
 		
 		return new SleepCommand(shleep);
 	}
 	
-	public Runnable parseRotateLeftArmCommand() {
+	public Runnable parseRotateLeftArmCommand()  throws ParsingException{
 		next = safeNext();
 		
 		AvatarInterface avatar = (AvatarInterface) table.get(((WordTokenInterface) next).getValue());
@@ -165,7 +171,7 @@ public class Parser implements ParserInterface{
 		return new RotateLeftArmCommand(avatar, angle);
 	}
 	
-	public Runnable parseRotateRightArmCommand() {
+	public Runnable parseRotateRightArmCommand()  throws ParsingException{
 		next = safeNext();
 		
 		AvatarInterface avatar = (AvatarInterface) table.get(((WordTokenInterface) next).getValue());
@@ -174,15 +180,15 @@ public class Parser implements ParserInterface{
 		return new RotateRightArmCommand(avatar, angle);
 	}
 	
-	public Runnable parseRedoCommand() {
+	public Runnable parseRedoCommand()  throws ParsingException{
 		return new RedoCommand();
 	}
 	
-	public Runnable parseUndoCommand() {
+	public Runnable parseUndoCommand()  throws ParsingException{
 		return new UndoCommand();
 	}
 	
-	public Runnable parseSayCommand() {
+	public Runnable parseSayCommand() throws ParsingException{
 		next = safeNext();
 		
 		if(next instanceof Quote) {
@@ -193,7 +199,7 @@ public class Parser implements ParserInterface{
 		}
 	}
 
-	public Runnable parseMoveCommand() {
+	public Runnable parseMoveCommand()  throws ParsingException{
 		next = safeNext();
 		
 		AvatarInterface avatar;
@@ -214,7 +220,7 @@ public class Parser implements ParserInterface{
 		return move;
 	}
 	
-	public int parseNumber() {
+	public int parseNumber() throws ParsingException{
 		next = safeNext();
 		
 		int out = 1;
@@ -244,7 +250,7 @@ public class Parser implements ParserInterface{
 		}
 	}
 
-	public Runnable parseApproachCommand() {
+	public Runnable parseApproachCommand() throws ParsingException{
 		next = safeNext();
 		
 		if(next instanceof Word) {
@@ -256,37 +262,47 @@ public class Parser implements ParserInterface{
 		}
 	}
 
-	public Runnable parsePassCommand() {
+	public Runnable parsePassCommand() throws ParsingException{
 		return new PassCommand(scene);
 	}
 
-	public Runnable parseFailCommand() {
+	public Runnable parseFailCommand() throws ParsingException{
 		return new FailCommand(scene);
 	}
 
-	public CommandListInterface parseCommandList() {
+	public CommandListInterface parseCommandList() throws ParsingException{
 		CommandListInterface commandList = new CommandList();
 		
-		if(hasNext()) {
-			while(hasNext() && !(peek() instanceof End)){
-				commandList.add(parseCommand());
+		try {
+			if(hasNext()) {
+				while(hasNext() && !(peek() instanceof End)){
+					commandList.add(parseCommand());
+				}
+			} else {
+				noNext();
 			}
-		} else {
-			noNext();
+			if(hasNext()) {
+				next = safeNext();
+			}
+			return commandList;
+		} catch (ParsingException e) {
+			errors = e.toString();
+			return commandList;
 		}
-		if(hasNext()) {
-			next = safeNext();
-		}
-		return commandList;
 	}
 
-	public Runnable parseRepeatCommand() {
+	public Runnable parseRepeatCommand() throws ParsingException{
 		next = safeNext();
 		
-		if(next instanceof Number) {
-			return new RepeatCommand(((NumberTokenInterface) next).getValue(), parseCommand());
-		} else {
-			expectedToken(new Number("0"), next);
+		try {
+			if(next instanceof Number) {
+				return new RepeatCommand(((NumberTokenInterface) next).getValue(), parseCommand());
+			} else {
+				expectedToken(new Number("0"), next);
+				return errorReturn;
+			}
+		} catch (ParsingException e) {
+			errors = e.toString();
 			return errorReturn;
 		}
 	}
@@ -307,7 +323,12 @@ public class Parser implements ParserInterface{
 		tokens = scanner.getTokenList();
 		reset();
 		
-		return parseCommand();
+		try {
+			return parseCommand();
+		} catch(ParsingException e) {
+			errors = e.toString();
+			return errorReturn;
+		}
 	}
 	
 	//Errors

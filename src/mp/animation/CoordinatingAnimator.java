@@ -8,13 +8,13 @@ import util.misc.ThreadSupport;
 @Tags({"CoordinatingAnimator"})
 public class CoordinatingAnimator extends Animator implements CoordinatingAnimatorInterface{
 
-	public CoordinatingAnimator(AvatarInterface avatar) {
-		super(avatar);
+	public CoordinatingAnimator() {
+		super();
 	}
 	
 	@Override
 	@Tags({"animateAvatar"})
-	public synchronized void dance() {
+	public synchronized void dance(AvatarInterface avatar) {
 		for(int i = 0; i < jumps; i++) {
 			ThreadSupport.sleep(sleepTime);
 			SingletonsCreator.produceClearanceManager().proceedAll();

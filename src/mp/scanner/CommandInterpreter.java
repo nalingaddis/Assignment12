@@ -5,7 +5,9 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import mp.animation.AnimatingCommand;
+import mp.animation.Animator;
 import mp.animation.CoordinatedAnimationCommand;
+import mp.animation.CoordinatedAnimator;
 import mp.animation.CoordinatingAnimatingCommand;
 import mp.animation.CoordinatingAnimator;
 import mp.factories.SingletonsCreator;
@@ -76,58 +78,62 @@ public class CommandInterpreter implements CommandInterpreterInterface{
 		propertySupport.add(listener);
 	}
 	
-	//Sync Animation
-	@Tags({"asynchronousArthur"})
-	public void asyncArthur() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceArthurAnimator(), false));
-		
-		thread.start();
-	}
-	
-	@Tags({"asynchronousGalahad"})
-	public void asyncGalahad() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceGalahadAnimator(), false));
-		
-		thread.start();
-	}
-	
-	@Tags({"asynchronousLancelot"})
-	public void asyncLancelot() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceLancelotAnimator(), false));
-		
-		thread.start();
-	}
-	
-	@Tags({"asynchronousRobin"})
-	public void asyncRobin() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceRobinAnimator(), false));
-		
-		thread.start();
-	}
+//	//Sync Animation
+//	@Tags({"asynchronousArthur"})
+//	public void asyncArthur() {
+//		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceArthurAnimator(), false));
+//		
+//		thread.start();
+//	}
+//	
+//	@Tags({"asynchronousGalahad"})
+//	public void asyncGalahad() {
+//		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceGalahadAnimator(), false));
+//		
+//		thread.start();
+//	}
+//	
+//	@Tags({"asynchronousLancelot"})
+//	public void asyncLancelot() {
+//		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceLancelotAnimator(), false));
+//		
+//		thread.start();
+//	}
+//	
+//	@Tags({"asynchronousRobin"})
+//	public void asyncRobin() {
+//		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceRobinAnimator(), false));
+//		
+//		thread.start();
+//	}
 	
 	//Coordinated Animations
 	@Tags({"waitingArthur"})
 	public void waitArthur() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceArthurAnimator(), true));
+		Thread thread = new Thread(new AnimatingCommand(new Animator(), 
+				SingletonsCreator.produceBridgeScene().getArthur(), true));
 		
 		thread.start();
 	}
 	@Tags({"waitingGalahad"})
 	public void waitGalahad() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceGalahadAnimator(), true));
+		Thread thread = new Thread(new AnimatingCommand(new Animator(),
+				SingletonsCreator.produceBridgeScene().getGalahad(), true));
 		
 		thread.start();
 	}
 	@Tags({"waitingLancelot"})
 	public void waitLancelot() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceLancelotAnimator(), true));
+		Thread thread = new Thread(new AnimatingCommand(new Animator(),
+				SingletonsCreator.produceBridgeScene().getLancelot(), true));
 		
 		thread.start();
 	}
 	
 	@Tags({"waitingRobin"})
 	public void waitRobin() {
-		Thread thread = new Thread(new AnimatingCommand(SingletonsCreator.produceRobinAnimator(), true));
+		Thread thread = new Thread(new AnimatingCommand(new Animator(),
+				SingletonsCreator.produceBridgeScene().getRobin(), true));
 		
 		thread.start();
 	}
@@ -139,37 +145,37 @@ public class CommandInterpreter implements CommandInterpreterInterface{
 	
 	//Lockstep
 	@Tags({"lockstepGuard"})
-	public void lockstepGuard() {
+	public synchronized void lockstepGuard() {
 		Thread thread = new Thread(new CoordinatingAnimatingCommand(
-				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getGuard())));
+				new CoordinatingAnimator(), SingletonsCreator.produceBridgeScene().getGuard()));
 		thread.start();
 	}
 	
 	@Tags({"lockstepArthur"})
 	public void lockstepArthur() {
 		Thread thread = new Thread(new CoordinatedAnimationCommand(
-				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getArthur())));
+				new CoordinatedAnimator(), SingletonsCreator.produceBridgeScene().getArthur()));
 		thread.start();
 	}
 	
 	@Tags({"lockstepGalahad"})
 	public void lockstepGalahad() {
 		Thread thread = new Thread(new CoordinatedAnimationCommand(
-				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getGalahad())));
+				new CoordinatedAnimator(), SingletonsCreator.produceBridgeScene().getGalahad()));
 		thread.start();
 	}
 	
 	@Tags({"lockstepLancelot"})
 	public void lockstepLancelot() {
 		Thread thread = new Thread(new CoordinatedAnimationCommand(
-				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getLancelot())));
+				new CoordinatedAnimator(), SingletonsCreator.produceBridgeScene().getLancelot()));
 		thread.start();
 	}
 	
 	@Tags({"lockstepRobin"})
 	public void lockstepRobin() {
 		Thread thread = new Thread(new CoordinatedAnimationCommand(
-				new CoordinatingAnimator(SingletonsCreator.produceBridgeScene().getRobin())));
+				new CoordinatedAnimator(), SingletonsCreator.produceBridgeScene().getRobin()));
 		thread.start();
 	}
 }

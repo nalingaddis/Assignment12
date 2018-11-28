@@ -5,6 +5,7 @@ import mp.history.PCLSupport;
 import mp.history.PCLSupportInterface;
 import util.annotations.ComponentWidth;
 import util.annotations.Row;
+import util.annotations.Tags;
 import util.models.AListenableVector;
 import util.models.ListenableVector;
 
@@ -19,6 +20,8 @@ public class AClearanceManager implements ClearanceManager {
 		notify(); 
 		System.out.println( Thread.currentThread() + ": after notify");
 	}
+	
+	@Tags({"waiting"})
 	public synchronized void waitForProceed() {
 			try {
 				String aThreadID = Thread.currentThread().toString();

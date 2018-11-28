@@ -31,11 +31,18 @@ public interface CommandInterpreterInterface extends PropertyListenerRegisterer 
 	//Setters
 	public void setCommand(String s);
 	
-	//Async Animation
-	public void asyncArthur();
-	public void asyncGalahad();
-	public void asyncLancelot();
-	public void asyncRobin();
+//	//Async Animation
+//	public void asyncArthur();
+//	public void asyncGalahad();
+//	public void asyncLancelot();
+//	public void asyncRobin();
+	
+	//Waiting
+	public void waitArthur();
+	public void waitGalahad();
+	public void waitLancelot();
+	public void waitRobin();
+	public void startAnimation();
 	
 	//LockStep
 	public void lockstepGuard();

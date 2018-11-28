@@ -154,48 +154,48 @@ public class SingletonsCreator {
 		return parser;
 	}
 	
-	public static AnimatorInterface produceGalahadAnimator() {
-		if(galahadAnimator == null) {
-			galahadAnimator = new Animator(produceBridgeScene().getGalahad());
-		}
-		
-		return galahadAnimator;
-	}
-	
-	public static AnimatorInterface produceGuardAnimator() {
-		if(guardAnimator == null) {
-			guardAnimator = new Animator(produceBridgeScene().getGuard());
-		}
-		
-		return guardAnimator;
-	}
-	
-	public static AnimatorInterface produceLancelotAnimator() {
-		if(lancelotAnimator == null) {
-			lancelotAnimator = new Animator(produceBridgeScene().getLancelot());
-		}
-		
-		return lancelotAnimator;
-	}
-	
-	public static AnimatorInterface produceRobinAnimator() {
-		if(robinAnimator == null) {
-			robinAnimator = new Animator(produceBridgeScene().getRobin());
-		}
-		
-		return robinAnimator;
-	}
-	
-	public static AnimatorInterface produceArthurAnimator() {
-		if(arthurAnimator == null) {
-			arthurAnimator = new Animator(produceBridgeScene().getArthur());
-		}
-		
-		return arthurAnimator;
-	}
+//	public static AnimatorInterface produceGalahadAnimator() {
+//		if(galahadAnimator == null) {
+//			galahadAnimator = new Animator(produceBridgeScene().getGalahad());
+//		}
+//		
+//		return galahadAnimator;
+//	}
+//	
+//	public static AnimatorInterface produceGuardAnimator() {
+//		if(guardAnimator == null) {
+//			guardAnimator = new Animator(produceBridgeScene().getGuard());
+//		}
+//		
+//		return guardAnimator;
+//	}
+//	
+//	public static AnimatorInterface produceLancelotAnimator() {
+//		if(lancelotAnimator == null) {
+//			lancelotAnimator = new Animator(produceBridgeScene().getLancelot());
+//		}
+//		
+//		return lancelotAnimator;
+//	}
+//	
+//	public static AnimatorInterface produceRobinAnimator() {
+//		if(robinAnimator == null) {
+//			robinAnimator = new Animator(produceBridgeScene().getRobin());
+//		}
+//		
+//		return robinAnimator;
+//	}
+//	
+//	public static AnimatorInterface produceArthurAnimator() {
+//		if(arthurAnimator == null) {
+//			arthurAnimator = new Animator(produceBridgeScene().getArthur());
+//		}
+//		
+//		return arthurAnimator;
+//	}
 	
 	@Tags({"broadcastingClearanceManagerFactoryMethod"})
-	public static BroadcastingClearanceManager produceClearanceManager() {
+	public synchronized static BroadcastingClearanceManager produceClearanceManager() {
 		if(clearance == null) {
 			clearance = new ABroadcastingClearanceManager();
 		}
